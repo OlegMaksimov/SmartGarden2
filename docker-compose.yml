@@ -1,0 +1,32 @@
+services:
+  node-red:
+    image: nodered/node-red:latest
+    restart: unless-stopped
+    environment:
+      - TZ=Europe/London
+    networks:
+      - smart-garden
+    ports:
+      - "1880:1880"
+    volumes:
+      - node-red-data:/data
+
+  MQTTbroker:
+    image: eclipse-mosquitto:1.6.13
+    restart: unless-stopped
+    networks:
+      - smart-garden
+
+  mongoDb:
+    image: mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+
+volumes:
+  node-red-data:
+
+networks:
+  smart-garden:
+# Для подключения к MQTT в качестве сервера должно использоваться имя сервиса
+# в нашем случае MQTTbroker:
